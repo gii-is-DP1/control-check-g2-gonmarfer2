@@ -2,22 +2,47 @@ package org.springframework.samples.petclinic.feeding;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.pet.PetType;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
 public class FeedingService {
-    public List<Feeding> getAll(){
-        return null;
-    }
 
-    public List<FeedingType> getAllFeedingTypes(){
-        return null;
-    }
+	private FeedingRepository feedingRepository;
 
-    public FeedingType getFeedingType(String typeName) {
-        return null;
-    }
+	@Autowired
+	public FeedingService(FeedingRepository feedingRepository) {
+		this.feedingRepository = feedingRepository;
+	}
 
-    public Feeding save(Feeding p) throws UnfeasibleFeedingException {
-        return null;       
-    }
+	public List<Feeding> getAll() {
+		return this.feedingRepository.findAll();
+	}
 
-    
+	public List<FeedingType> getAllFeedingTypes() {
+		return this.feedingRepository.findAllFeedingTypes();
+	}
+
+	public FeedingType getFeedingType(String typeName) {
+		return this.feedingRepository.findFeedingTypeByName(typeName);
+	}
+
+	@Transactional(rollbackFor = UnfeasibleFeedingException.class)
+	public Feeding save(Feeding p) throws UnfeasibleFeedingException {
+		PetType petType = p.getPetType();
+		PetType ftPetType = p.getFeedingTypePetType();
+
+		if (!petType.equals(ftPetType)) {
+			throw new UnfeasibleFeedingException();
+
+		} else {
+			this.feedingRepository.save(p);
+
+		}
+
+		return p;
+	}
+
 }

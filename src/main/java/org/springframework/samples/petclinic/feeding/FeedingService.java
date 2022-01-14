@@ -9,39 +9,40 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FeedingService {
-	
+
 	private FeedingRepository feedingRepository;
-	
+
 	@Autowired
 	public FeedingService(FeedingRepository feedingRepository) {
 		this.feedingRepository = feedingRepository;
 	}
-	
-    public List<Feeding> getAll(){
-        return this.feedingRepository.findAll();
-    }
 
-    public List<FeedingType> getAllFeedingTypes(){
-        return this.feedingRepository.findAllFeedingTypes();
-    }
+	public List<Feeding> getAll() {
+		return this.feedingRepository.findAll();
+	}
 
-    public FeedingType getFeedingType(String typeName) {
-        return this.feedingRepository.findFeedingTypeByName(typeName);
-    }
+	public List<FeedingType> getAllFeedingTypes() {
+		return this.feedingRepository.findAllFeedingTypes();
+	}
 
-    @Transactional(rollbackFor = UnfeasibleFeedingException.class)
-    public Feeding save(Feeding p) throws UnfeasibleFeedingException {
-        PetType petType = p.getPet().getType();
-        PetType ftPetType = p.getFeedingType().getPetType();
-    	if(!petType.equals(ftPetType)) {
-    		throw new UnfeasibleFeedingException();
-    	
-    	} else {
-    		this.feedingRepository.save(p);
-    	}
-    	
-    	return p;       
-    }
+	public FeedingType getFeedingType(String typeName) {
+		return this.feedingRepository.findFeedingTypeByName(typeName);
+	}
 
-    
+	@Transactional(rollbackFor = UnfeasibleFeedingException.class)
+	public Feeding save(Feeding p) throws UnfeasibleFeedingException {
+		PetType petType = p.getPetType();
+		PetType ftPetType = p.getFeedingTypePetType();
+
+		if (!petType.equals(ftPetType)) {
+			throw new UnfeasibleFeedingException();
+
+		} else {
+			this.feedingRepository.save(p);
+
+		}
+
+		return p;
+	}
+
 }

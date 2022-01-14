@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.pet.Pet;
+import org.springframework.samples.petclinic.pet.PetType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,8 +24,8 @@ import lombok.Setter;
 @Table(name = "feedings")
 public class Feeding extends BaseEntity {
     
+	@Column(name = "start_date", nullable = false)
 	@NotNull
-	@Column(name = "start_date")        
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	LocalDate startDate;
 	
@@ -39,4 +40,12 @@ public class Feeding extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "feeding_type_id")
 	FeedingType feedingType;
+	
+	public PetType getPetType() {
+		return this.getPet().getType();
+	}
+	
+	public PetType getFeedingTypePetType() {
+		return this.getFeedingType().getPetType();
+	}
 }

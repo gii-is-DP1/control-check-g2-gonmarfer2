@@ -22,14 +22,14 @@ import lombok.Setter;
 public class FeedingType extends BaseEntity {
 
 	@Size(min = 5, max = 30)
-	@Column(name = "name", unique = true)
+	@Column(name = "name", unique = true) //No extiendo NamedEntity porque necesito "unique" y el tamaño no coincide
 	@NotEmpty
 	String name;
 	
 	@NotEmpty
     String description;
 	
-	@ManyToOne(optional = false)
+	@ManyToOne()
 	@JoinColumn(name = "pet_type_id")
 	@NotNull
     PetType petType;
